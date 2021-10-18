@@ -22,5 +22,8 @@ urlpatterns = [
     path('',views.home, name='home'),
     #path('', include('rest_auth.urls')),
     path('registration/', include('rest_auth.registration.urls')),
-    path('employees', views.employees, name='employees')
+    path('employees', views.employees, name='employees'),
+    path('employees/<int:employee_id>',views.employee_details, name='employee_details'),
+    path('reports/employees/salary/', views.salary_reports, name="salary_reports"),
+    path('reports/employees/age/', views.age_reports, name="age_reports")
 ]
