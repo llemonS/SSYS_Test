@@ -18,6 +18,7 @@ from django.urls import path
 from employees import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home')
+    path(r'admin/', admin.site.urls),
+    path(r'^$', views.home, name='home'),
+    path('employees', views.employees, name='employees')
 ]
