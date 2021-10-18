@@ -27,7 +27,6 @@ Last but not least important, persist data and use authentication to access.
 * Registering new users
 
 ```
-curl -X POST -H 
 $ curl -X POST -H "Content-Type: application/json" -d '{"username":"testuser", "password1":"testpassword", "password2":"testpassword"}' localhost:8000/registration/
 ```
 * Expected response:
