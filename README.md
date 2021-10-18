@@ -22,3 +22,19 @@ Reports:
 
 Last but not least important, persist data and use authentication to access.
 
+* Registering new users
+
+```
+curl -X POST -H 
+$ curl -X POST -H "Content-Type: application/json" -d '{"username":"testuser", "password1":"testpassword", "password2":"testpassword"}' localhost:8000/registration/
+```
+* Expected response:
+
+```
+{"key":"1565c60a136420bc733b10c4a165e07698014acb"}
+```
+
+* To use the API make the request as example:
+```
+$ curl -X GET -H 'Authorization: Token 1565c60a136420bc733b10c4a165e07698014acb' localhost:8000/employees
+```
