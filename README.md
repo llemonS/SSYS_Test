@@ -45,3 +45,16 @@ To install all dependencies, run the command below:
 ```
 $ pip3 install -r requirements.txt
 ```
+
+
+## Create employee
+
+To create a new employee insert the data below.
+```
+{
+"name":"Teste",
+"email":"teste@teste.com",
+"department":"technology",
+"salary":1000.00,
+"birth_date": "2020-01-01"}
+```
