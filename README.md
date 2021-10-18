@@ -2,8 +2,10 @@
 API with defined routes and functionalities as challenge.
 
 
-* [Definition of Done](#definition-of-done)
+## Contents
 
+* [Definition of Done](#definition-of-done)
+* [Setup](#setup)
 
 ## Definition of Done
 
@@ -37,4 +39,10 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"username":"testuser", "
 * To use the API make the request as example:
 ```
 $ curl -X GET -H 'Authorization: Token 1565c60a136420bc733b10c4a165e07698014acb' localhost:8000/employees
+```
+
+## Setup
+To install all dependencies, run the command below:
+```
+$ pip3 install -r requirements.txt
 ```
