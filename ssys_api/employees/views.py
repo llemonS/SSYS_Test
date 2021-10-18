@@ -7,6 +7,15 @@ from rest_framework import status
 from .models import Employee
 
 # Create your views here.
+#TODO:
+#employees list GET
+#employees create POST
+#employees/ID UPDATE
+#employees/ID DELETE
+#employees/ID GET
+#reports/employees/salary/ highest, lowest average fields GET
+#reports/employees/age/ highest, lowest average fields GET
+
 
 @api_view(['GET'])
 @csrf_exempt
