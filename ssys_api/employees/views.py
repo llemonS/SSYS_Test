@@ -17,7 +17,7 @@ import json
 #employees/ID UPDATE, done
 #employees/ID DELETE, done
 #employees/ID GET, done
-#reports/employees/salary/ highest, lowest average fields GET
+#reports/employees/salary/ highest, lowest average fields GET, done
 #reports/employees/age/ highest, lowest average fields GET
 
 #validator email field
@@ -109,3 +109,10 @@ def age_reports(request):
     average_salary = Employee.objects.all().aggregate(Avg('salary'))
     content = {"lowest": min_employee, "highest": max_employee, "average":average_salary["salary__avg"]}
     return JsonResponse(content,status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def err_404(request, exception=None):
+    content = {"error":"this route doesnt exists"}
+    return JsonResponse(content,status=status.HTTP_404_NOT_FOUND)

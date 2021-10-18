@@ -13,9 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import handler404, handler500, handler403, handler400
 from django.contrib import admin
 from django.urls import path, include
 from employees import views
+
+handler404 = views.err_404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,3 +30,4 @@ urlpatterns = [
     path('reports/employees/salary/', views.salary_reports, name="salary_reports"),
     path('reports/employees/age/', views.age_reports, name="age_reports")
 ]
+
