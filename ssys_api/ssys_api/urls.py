@@ -19,7 +19,8 @@ from employees import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('rest_auth.urls')),
+    path('',views.home, name='home'),
+    #path('', include('rest_auth.urls')),
     path('registration/', include('rest_auth.registration.urls')),
     path('employees', views.employees, name='employees')
 ]
