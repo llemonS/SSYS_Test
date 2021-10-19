@@ -1,32 +1,17 @@
-"""ssys_api URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.conf.urls import handler404, handler500, handler403, handler400
 from django.contrib import admin
 from django.urls import path, include
+
 from employees import views
 
 handler404 = views.err_404
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',views.home, name='home'),
-    #path('', include('rest_auth.urls')),
-    path('registration/', include('rest_auth.registration.urls')),
+    path('', views.home, name='home'),
+    path('admin/', admin.site.urls, name='admin'),
+    path('registration/', include('rest_auth.registration.urls'), name='registration'),
     path('employees', views.employees, name='employees'),
-    path('employees/<int:employee_id>',views.employee_details, name='employee_details'),
+    path('employees/<int:employee_id>', views.employee_details, name='employee_details'),
     path('reports/employees/salary/', views.salary_reports, name="salary_reports"),
     path('reports/employees/age/', views.age_reports, name="age_reports")
 ]

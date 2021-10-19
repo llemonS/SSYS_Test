@@ -1,26 +1,20 @@
+from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from .serializers import EmployeeSerializer
+from django.db.models import Avg, Max, Min
+from django.http import JsonResponse
+from django.core import serializers
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Avg, Max, Min
-from rest_framework.parsers import JSONParser 
-from .serializers import EmployeeSerializer
-from django.http import JsonResponse
 from rest_framework import status
-from django.core import serializers
+
+
 from .models import Employee
-import json
 
-# Create your views here.
-#TODO:
-#employees list GET, done
-#employees create POST, done
-#employees/ID UPDATE, done
-#employees/ID DELETE, done
-#employees/ID GET, done
-#reports/employees/salary/ highest, lowest average fields GET, done
-#reports/employees/age/ highest, lowest average fields GET
+import datetime
 
-#validator email field
 
 @api_view(['GET'])
 @csrf_exempt
@@ -33,14 +27,21 @@ def home(request):
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def employees(request):
+    
     if request.method == 'GET':
         content = Employee.objects.all()
         serializer = EmployeeSerializer(content, many=True)
-
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    
     if request.method == 'POST':
-        data = json.loads(request.body)
+        data = request.data
         try:
+            validate_email(data['email'])
+        except:
+            return JsonResponse({'error':f'email not valid'})
+        
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
             employee = Employee.objects.create(
                 name=data['name'],
                 email=data['email'],
@@ -48,11 +49,10 @@ def employees(request):
                 salary=data['salary'],
                 birth_date = data['birth_date']
             )
-            serializer = EmployeeSerializer(employee, many=True)
             return JsonResponse(serializer.data, safe=False,status=status.HTTP_201_CREATED)
-        except Exception as e:
-                return JsonResponse({'error':f'something went wrong {e}'},safe=False,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        
+        else:
+            return JsonResponse({"error": serializer.errors},safe=False,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 @api_view(['GET','PUT','DELETE'])
 @csrf_exempt
@@ -65,7 +65,7 @@ def employee_details(request, employee_id):
         return JsonResponse(employee[0], safe=False,status=status.HTTP_200_OK)
 
     if request.method == 'PUT':
-        data = JSONParser().parse(request)
+        data = request.data
         try:
             employee = Employee.objects.get(id=employee_id)
             serializer = EmployeeSerializer(employee, data=data)
@@ -102,12 +102,15 @@ def salary_reports(request):
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def age_reports(request):
-    max_age = Employee.objects.all().aggregate(Max('birth_date'))
-    max_employee = list(Employee.objects.filter(salary=max_age['salary__max']).values())[0]
-    min_age = Employee.objects.all().aggregate(Min('birth_date'))
-    min_employee = list(Employee.objects.filter(salary=min_age['salary__min']).values())[0]
-    average_salary = Employee.objects.all().aggregate(Avg('salary'))
-    content = {"lowest": min_employee, "highest": max_employee, "average":average_salary["salary__avg"]}
+    recent_date = Employee.objects.all().aggregate(Max('birth_date'))
+    max_employee = list(Employee.objects.filter(birth_date=recent_date['birth_date__max']).values())[0]
+    older_date = Employee.objects.all().aggregate(Min('birth_date'))
+    min_employee = list(Employee.objects.filter(birth_date=older_date['birth_date__min']).values())[0]
+    today = datetime.datetime.today()
+    youngest_age = today.year - recent_date['birth_date__max'].year
+    olderst_age = today.year - older_date['birth_date__min'].year
+    average = float(youngest_age + olderst_age)/2
+    content = {"younger": max_employee, "older": min_employee, "average": average}
     return JsonResponse(content,status=status.HTTP_200_OK)
 
 @api_view(['GET'])

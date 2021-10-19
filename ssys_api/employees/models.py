@@ -1,12 +1,14 @@
-from django.db import models
+from django.core.exceptions import ValidationError
 from django.db.models.fields import EmailField
-from django.conf import settings
 from django.utils import timezone
+from django.conf import settings
+from django.db import models
+
 
 # Create your models here.
 class Employee(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(max_length=200, )
+    name = models.CharField(max_length=200)
     email = models.EmailField(max_length=200)
     department = models.CharField(max_length=200)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
